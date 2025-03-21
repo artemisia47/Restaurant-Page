@@ -1,4 +1,6 @@
-import interiorImageSrc from './interior.jpg';  
+import interiorImageSrc1 from './interior.jpg';
+import interiorImageSrc2 from './orange.jpg';
+import interiorImageSrc3 from './tea2.jpg';
 
 export function loadHomepage() {
   const contentDiv = document.getElementById('content');
@@ -13,30 +15,72 @@ export function loadHomepage() {
   header.classList.add('homepage-header');
 
   
-  const imageTextContainer = document.createElement('div');
-  imageTextContainer.classList.add('image-text-container');
-
-  //  image element
-  const image = document.createElement('img');
-  image.src = interiorImageSrc;  // Set the dynamically imported image path
-  image.alt = 'Restaurant Interior';
-  image.classList.add('homepage-image');
-
-  //  text content
-  const text = document.createElement('div');
-  text.classList.add('homepage-text');
-  text.innerHTML = `
-    <p>Come and enjoy the best dishes in town. Our secret recipes have been passed down for generations!</p>
-  `;
+  const carouselContainer = document.createElement('div');
+  carouselContainer.classList.add('carousel-container');
 
   
-  imageTextContainer.appendChild(image);
-  imageTextContainer.appendChild(text);
+  const images = [interiorImageSrc1, interiorImageSrc2, interiorImageSrc3];
+  const carouselImages = document.createElement('div');
+  carouselImages.classList.add('carousel-images');
+
+  images.forEach((imageSrc, index) => {
+    const image = document.createElement('img');
+    image.src = imageSrc;
+    image.alt = `Restaurant Interior ${index + 1}`;
+    image.classList.add('carousel-image');
+    carouselImages.appendChild(image);
+  });
+
+  
+  const prevButton = document.createElement('button');
+  prevButton.textContent = 'Prev';
+  prevButton.classList.add('carousel-prev');
+  
+  const nextButton = document.createElement('button');
+  nextButton.textContent = 'Next';
+  nextButton.classList.add('carousel-next');
+
+  
+  carouselContainer.appendChild(prevButton);
+  carouselContainer.appendChild(carouselImages);
+  carouselContainer.appendChild(nextButton);
 
   
   homepageContent.appendChild(header);
-  homepageContent.appendChild(imageTextContainer);
-
- 
+  homepageContent.appendChild(carouselContainer);
+  
   contentDiv.appendChild(homepageContent);
+
+  
+  let currentIndex = 0;
+  const totalImages = 3;
+
+  
+  const showImage = (index) => {
+    const images = carouselImages.querySelectorAll('.carousel-image');
+    images.forEach((img, i) => {
+      img.style.display = (i === index) ? 'block' : 'none';
+    });
+  };
+
+  
+  showImage(currentIndex);
+
+
+  nextButton.addEventListener('click', () => {
+    currentIndex = (currentIndex + 1) % totalImages;
+    showImage(currentIndex);
+  });
+
+  
+  prevButton.addEventListener('click', () => {
+    currentIndex = (currentIndex - 1 + totalImages) % totalImages;
+    showImage(currentIndex);
+  });
+
+
+  setInterval(() => {
+    currentIndex = (currentIndex + 1) % totalImages;
+    showImage(currentIndex);
+  }, 3000);
 }
